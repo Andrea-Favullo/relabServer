@@ -15,7 +15,7 @@ app.get('/ci_vettore', function (req, res) {
     //Per connettermi al DB uso il metodo statico sqlUtils.connect
     //Passo come parametro la funzione sqlUtils.makeSqlRequest che verrà lanciata 
     //se la connessione al DB avrà successo  
-    sqlUtils.ciVettRequest(res);
+    sqlUtils.ciVettRequest(req, res, false);
 });
 
 app.get('/ci_vettore/:foglio', function (req, res) {
