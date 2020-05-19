@@ -10,7 +10,7 @@ import {HttpClientModule} from '@angular/common/http'; // <---
   ],
   imports: [
     BrowserModule,
-    AgmCoreModule.forRoot({apiKey: 'AIzaSyCvRZo0glb1pAsICX35zp-9FnxgPQUzxGs'}), // <---
+    AgmCoreModule.forRoot({apiKey: 'AIzaSyDfFfUFVIHGvByIJe2N6dnYKSu97F_AwGQ'}), // <---
     HttpClientModule // <---
   ],
   providers: [],
