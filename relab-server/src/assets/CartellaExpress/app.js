@@ -1,13 +1,15 @@
 const express = require('express');
 const app = new express();
-
+const cors = require('cors');
+app.use(new cors());
 //Importo la classe per le chiamate al DB
 const sqlUtils = require('./SqlUtils.js');
 
 app.get('/', function (req, res) {
     //Per connettermi al DB uso il metodo statico sqlUtils.connect
     //Passo come parametro la funzione sqlUtils.makeSqlRequest che verrà lanciata 
-    //se la connessione al DB avrà successo  
+    //se la connessione al DB avrà successo
+    
     sqlUtils.connect(req, res, sqlUtils.makeSqlRequest);
 });
 
@@ -15,7 +17,7 @@ app.get('/ci_vettore', function (req, res) {
     //Per connettermi al DB uso il metodo statico sqlUtils.connect
     //Passo come parametro la funzione sqlUtils.makeSqlRequest che verrà lanciata 
     //se la connessione al DB avrà successo  
-    sqlUtils.ciVettRequest(req, res, false);
+    sqlUtils.ciVettRequest(req, res);
 });
 
 app.get('/ci_vettore/:foglio', function (req, res) {

@@ -9,7 +9,7 @@ import { Observable } from 'rxjs';
   styleUrls: ['./app.component.css']
 })
 export class AppComponent implements OnInit {
-  title = 'ang-maps';
+  title = 'Angular Google Maps (AGM) Demo';
   // google maps zoom level
   geoJsonObject: GeoFeatureCollection; //Oggetto che conterrà il vettore di GeoJson
   obsGeoData: Observable<GeoFeatureCollection>;
@@ -27,7 +27,7 @@ export class AppComponent implements OnInit {
   //Una volta che la pagina web è caricata, viene lanciato il metodo ngOnInit scarico i    dati
   //dal server
   ngOnInit() {
-    this.obsGeoData = this.http.get<GeoFeatureCollection>("TUO_URL");
+    this.obsGeoData = this.http.get<GeoFeatureCollection>("https://3000-f9ed21cb-be9e-40ef-bf3c-3b1621852d74.ws-eu01.gitpod.io/");
     this.obsGeoData.subscribe(this.prepareData);
   }
 }
