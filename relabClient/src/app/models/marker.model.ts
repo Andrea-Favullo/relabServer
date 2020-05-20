@@ -4,7 +4,7 @@ export class Marker {
   //“Gas naturale” o “Energia elettrica” (abbreviati in Gas e Elettrica) imposto l’icona e cancello
   //l’etichetta
   constructor(public lat: number, public lng: number, public label?: string) {
-    console.log(this)
+
     if (this.label == "Gas naturale") {
       this.icon = {
         url: '../assets/img/gas.ico',

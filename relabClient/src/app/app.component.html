@@ -1,9 +1,12 @@
+<!DOCTYPE html>
 <h1>{{title}}</h1>
+
+<p>Inserisci il codice del foglio: <input type="text" #num></p>
+<button (click)="cambia(num)">Cambia foglio</button>
+
 <agm-map [latitude]="lat" [longitude]="lng" [zoom]="zoom" [zoomControl]="true">
 
-	<agm-marker *ngFor="let m of markers" [latitude]="m.lat" [longitude]="m.lng" [label]="m.label" [iconUrl]="m.icon">
-	</agm-marker>
-	<agm-data-layer [geoJson]="geoJsonObject" [style]="styleFunc">
-	</agm-data-layer>
+	<agm-marker *ngFor="let m of markers" [latitude]="m.lat" [longitude]="m.lng" [label]="m.label" [iconUrl]="m.icon"></agm-marker>
+	<agm-data-layer [geoJson]="geoJsonObject" [style]="styleFunc"></agm-data-layer>
 
 </agm-map>
