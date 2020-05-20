@@ -27,15 +27,19 @@ export class AppComponent implements OnInit {
   }
   //Metodo che riceve i dati e li aggiunge ai marker
   prepareCiVettData = (data: Ci_vettore[]) => {
-    console.log(data); //Verifica di ricevere i vettori energetici
+
+    //console.log(data); //Verifica di ricevere i vettori energetici
     this.markers = []; //NB: markers va dichiarata tra le proprietà markers : Marker[]
     for (const iterator of data) { //Per ogni oggetto del vettore creoa un Marker
       let m = new Marker(iterator.WGS84_X, iterator.WGS84_Y, iterator.CI_VETTORE);
       this.markers.push(m);
     }
+    console.log(`Metodo prepareCiVettData`)
+    console.log(this.markers)
   }
   //Metodo che scarica i dati nella variabile geoJsonObject
   prepareData = (data: GeoFeatureCollection) => {
+    console.log(`Metodo prepareData`)
     this.geoJsonObject = data
     console.log(this.geoJsonObject);
   }

@@ -5,11 +5,23 @@ export class Marker {
   //l’etichetta
   constructor(public lat: number, public lng: number, public label?: string) {
     if (this.label.includes("Gas")) {
-      this.icon = { url: './assets/img/gas.ico' };
+      this.icon = {
+        url: '../assets/img/gas.ico',
+        scaledSize: {
+          width: 60,
+          height: 60
+        }
+      };
       this.label = "";
     }
     if (this.label.includes("elettrica")) {
-      this.icon = { url: './assets/img/electricity.ico' };
+      this.icon = {
+        url: '../assets/img/electricity.ico',
+        scaledSize: {
+          width: 60,
+          height: 60
+        }
+      };
       this.label = "";
     }
   }
