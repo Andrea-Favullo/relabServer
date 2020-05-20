@@ -47,7 +47,7 @@ export class AppComponent implements OnInit {
   //Una volta che la pagina web è caricata, viene lanciato il metodo ngOnInit scarico i    dati
   //dal server
   ngOnInit() {
-    this.obsCiVett = this.http.get<Ci_vettore[]>("https://3000-f9ed21cb-be9e-40ef-bf3c-3b1621852d74.ws-eu01.gitpod.io/ci_vettore/90");
+    this.obsCiVett = this.http.get<Ci_vettore[]>("https://3000-f9ed21cb-be9e-40ef-bf3c-3b1621852d74.ws-eu01.gitpod.io/ci_vettore/130");
     this.obsCiVett.subscribe(this.prepareCiVettData);
     this.obsGeoData = this.http.get<GeoFeatureCollection>("https://3000-f9ed21cb-be9e-40ef-bf3c-3b1621852d74.ws-eu01.gitpod.io/");
     this.obsGeoData.subscribe(this.prepareData);
