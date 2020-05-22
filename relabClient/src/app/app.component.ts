@@ -40,7 +40,7 @@ export class AppComponent implements OnInit {
 
   cambia(num: HTMLInputElement){
 
-    let url = "https://3000-f9ed21cb-be9e-40ef-bf3c-3b1621852d74.ws-eu01.gitpod.io/ci_vettore/"+num.value
+    let url = "https://3000-d293def7-367b-45c9-b3f7-45e9911e18c7.ws-eu01.gitpod.io/ci_vettore/"+num.value
     console.log(url)
     this.obsCiVett = this.http.get<Ci_vettore[]>(url);
     this.obsCiVett.subscribe(this.prepareCiVettData);
@@ -58,7 +58,7 @@ export class AppComponent implements OnInit {
   //Una volta che la pagina web è caricata, viene lanciato il metodo ngOnInit scarico i    dati
   //dal server
   ngOnInit() {
-    this.obsGeoData = this.http.get<GeoFeatureCollection>("https://3000-f9ed21cb-be9e-40ef-bf3c-3b1621852d74.ws-eu01.gitpod.io/");
+    this.obsGeoData = this.http.get<GeoFeatureCollection>("https://3000-d293def7-367b-45c9-b3f7-45e9911e18c7.ws-eu01.gitpod.io/");
     this.obsGeoData.subscribe(this.prepareData);
   }
   styleFunc = (feature) => {
