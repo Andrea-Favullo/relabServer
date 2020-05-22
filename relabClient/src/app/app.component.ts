@@ -44,14 +44,13 @@ export class AppComponent implements OnInit {
     this.zoom = 16;
   }
 
-  cambia(num: HTMLInputElement) {
+  cambia(foglio) {
 
-    let url = "https://3000-d293def7-367b-45c9-b3f7-45e9911e18c7.ws-eu01.gitpod.io/ci_vettore/" + num.value
-    console.log(url)
-    this.obsCiVett = this.http.get<Ci_vettore[]>(url);
-    this.obsCiVett.subscribe(this.prepareCiVettData);
-
-    return false
+    let val = foglio.value; //Commenta qui
+    this.obsCiVett = this.http.get<Ci_vettore[]>(`TUO_URL/ci_vettore/${val}`);  //Commenta qui
+    this.obsCiVett.subscribe(this.prepareCiVettData); //Commenta qui
+    console.log(val);
+    return false;
   }
 
   //Metodo che scarica i dati nella variabile geoJsonObject
