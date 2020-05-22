@@ -22,9 +22,49 @@ export class AppComponent implements OnInit {
   lng: number = 9.205331366401035;
   lat: number = 45.45227445505016;
 
+  circleLat: number = 0; //Latitudine e longitudine iniziale del cerchio
+  circleLng: number = 0;
+  maxRadius: number = 400; //Voglio evitare raggi troppo grossi
+  radius: number = this.maxRadius; //Memorizzo il raggio del cerchio
+
   constructor(public http: HttpClient) {
     //Facciamo iniettare il modulo HttpClient dal framework Angular (ricordati di importare la libreria)
   }
+
+  //Aggiungi il gestore del metodo mapClicked
+  //import { MouseEvent } from '@agm/core'; <--da importare
+  mapClicked($event: MouseEvent) {
+    this.circleLat = $event.coords.lat; //Queste sono le coordinate cliccate
+    this.circleLng = $event.coords.lng; //Sposto il centro del cerchio qui
+    this.lat = this.circleLat; //Sposto il centro della mappa qui
+    this.lng = this.circleLng;
+    this.zoom = 15;  //Zoom sul cerchio
+  }
+
+  //Aggiungi il gestore del metodo radiusChange
+  circleRedim(newRadius: number) {
+    console.log(newRadius) //posso leggere sulla console il nuovo raggio
+    this.radius = newRadius;  //Ogni volta che modifico il cerchio, ne salvo il raggio
+  }
+
+  //Aggiungi il gestore del metodo circleDblClick
+  circleDoubleClicked(circleCenter) {
+    console.log(circleCenter); //Voglio ottenere solo i valori entro questo cerchio
+    console.log(this.radius);
+
+    this.circleLat = circleCenter.coords.lat; //Aggiorno le coordinate del cerchio
+    this.circleLng = circleCenter.coords.lng; //Aggiorno le coordinate del cerchio
+
+    //Non conosco ancora le prestazioni del DB, non voglio fare ricerche troppo onerose
+    if (this.radius > this.maxRadius) {
+      console.log("area selezionata troppo vasta sarà reimpostata a maxRadius");
+      this.radius = this.maxRadius;
+    }
+    console.log("raggio in gradi " + (this.radius * 0.00001) / 1.1132)
+
+    //Voglio spedire al server una richiesta che mi ritorni tutte le abitazioni all'interno del cerchio
+  }
+
   //Metodo che riceve i dati e li aggiunge ai marker
   prepareCiVettData = (data: Ci_vettore[]) => {
     let latTot = 0; //Uso queste due variabili per calcolare latitudine e longitudine media
@@ -46,9 +86,9 @@ export class AppComponent implements OnInit {
 
   cambia(foglio) {
 
-    let val = foglio.value; //Commenta qui
-    this.obsCiVett = this.http.get<Ci_vettore[]>(`TUO_URL/ci_vettore/${val}`);  //Commenta qui
-    this.obsCiVett.subscribe(this.prepareCiVettData); //Commenta qui
+    let val = foglio.value; //viene preso il valore del foglio
+    this.obsCiVett = this.http.get<Ci_vettore[]>(`https://3000-d293def7-367b-45c9-b3f7-45e9911e18c7.ws-eu01.gitpod.io/ci_vettore/${val}`);  //viene effettuata la get con quel valore del foglio
+    this.obsCiVett.subscribe(this.prepareCiVettData); //salvo i dati richiesti dalla get
     console.log(val);
     return false;
   }
