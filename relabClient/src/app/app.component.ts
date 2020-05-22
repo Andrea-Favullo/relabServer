@@ -27,20 +27,26 @@ export class AppComponent implements OnInit {
   }
   //Metodo che riceve i dati e li aggiunge ai marker
   prepareCiVettData = (data: Ci_vettore[]) => {
+    let latTot = 0; //Uso queste due variabili per calcolare latitudine e longitudine media
+    let lngTot = 0; //E centrare la mappa
 
-    //console.log(data); //Verifica di ricevere i vettori energetici
-    this.markers = []; //NB: markers va dichiarata tra le proprietà markers : Marker[]
-    for (const iterator of data) { //Per ogni oggetto del vettore creoa un Marker
+    console.log(data);
+    this.markers = [];
+
+    for (const iterator of data) {
       let m = new Marker(iterator.WGS84_X, iterator.WGS84_Y, iterator.CI_VETTORE);
+      latTot += m.lat; //Sommo tutte le latitutidini e longitudini
+      lngTot += m.lng;
       this.markers.push(m);
     }
-    console.log(`Metodo prepareCiVettData`)
-    console.log(this.markers)
+    this.lng = lngTot / data.length; //faccio la media delle coordinate
+    this.lat = latTot / data.length;
+    this.zoom = 16;
   }
 
-  cambia(num: HTMLInputElement){
+  cambia(num: HTMLInputElement) {
 
-    let url = "https://3000-d293def7-367b-45c9-b3f7-45e9911e18c7.ws-eu01.gitpod.io/ci_vettore/"+num.value
+    let url = "https://3000-d293def7-367b-45c9-b3f7-45e9911e18c7.ws-eu01.gitpod.io/ci_vettore/" + num.value
     console.log(url)
     this.obsCiVett = this.http.get<Ci_vettore[]>(url);
     this.obsCiVett.subscribe(this.prepareCiVettData);
