@@ -51,4 +51,21 @@ module.exports = class SqlUtils {
         res.send(result.recordset);  //Invio il risultato al Browser
     }
 
+
+    static ciVettGeoRequest(req, res) {
+        let sqlRequest = new sql.Request();  //sqlRequest: oggetto che serve a eseguire le query
+        let x = Number(req.params.lng);
+        let y = Number(req.params.lat);
+        let r = Number(req.params.r);
+        let q = `SELECT INDIRIZZO, WGS84_X, WGS84_Y, CLASSE_ENE, EP_H_ND, CI_VETTORE, FOGLIO, SEZ
+        FROM [Katmai].[dbo].[interventiMilano]
+        WHERE WGS84_X > ${x} - ${r} AND 
+        WGS84_X < ${x} + ${r} AND
+        WGS84_Y > ${y} - ${r} AND 
+        WGS84_Y < ${y} + ${r}`
+
+        console.log(q);
+        //eseguo la query e aspetto il risultato nella callback
+        sqlRequest.query(q, (err, result) => { SqlUtils.sendCiVettResult(err, result, res) });
+    }
 }
