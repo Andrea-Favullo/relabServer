@@ -21,7 +21,7 @@ export class AppComponent implements OnInit {
   markers: Marker[] //Marker va importato
   lng: number = 9.205331366401035;
   lat: number = 45.45227445505016;
-  serverUrl: string = "https://3000-eb72812f-0e99-4ae6-bb83-5a5bc2ad1bad.ws-eu01.gitpod.io/";
+  serverUrl: string = "https://3000-eb72812f-0e99-4ae6-bb83-5a5bc2ad1bad.ws-eu01.gitpod.io";
 
   circleLat: number = 0; //Latitudine e longitudine iniziale del cerchio
   circleLng: number = 0;
