@@ -21,6 +21,7 @@ export class AppComponent implements OnInit {
   markers: Marker[] //Marker va importato
   lng: number = 9.205331366401035;
   lat: number = 45.45227445505016;
+  serverUrl: string = "https://3000-eb72812f-0e99-4ae6-bb83-5a5bc2ad1bad.ws-eu01.gitpod.io/";
 
   circleLat: number = 0; //Latitudine e longitudine iniziale del cerchio
   circleLng: number = 0;
@@ -51,25 +52,37 @@ export class AppComponent implements OnInit {
   circleDoubleClicked(circleCenter) {
     console.log(circleCenter); //Voglio ottenere solo i valori entro questo cerchio
     console.log(this.radius);
-
-    this.circleLat = circleCenter.coords.lat; //Aggiorno le coordinate del cerchio
-    this.circleLng = circleCenter.coords.lng; //Aggiorno le coordinate del cerchio
-
-    //Non conosco ancora le prestazioni del DB, non voglio fare ricerche troppo onerose
+    this.circleLat = circleCenter.coords.lat;
+    this.circleLng = circleCenter.coords.lng;
     if (this.radius > this.maxRadius) {
       console.log("area selezionata troppo vasta sarà reimpostata a maxRadius");
       this.radius = this.maxRadius;
     }
+
     let raggioInGradi = (this.radius * 0.00001) / 1.1132;
-    console.log("raggio in gradi " + raggioInGradi)
+
+    const urlciVett = `${this.serverUrl}/ci_geovettore/
+    ${this.circleLat}/
+    ${this.circleLng}/
+    ${raggioInGradi}`;
+
+    const urlGeoGeom = `${this.serverUrl}/geogeom/
+    ${this.circleLat}/
+    ${this.circleLng}/
+    ${raggioInGradi}`;
+    //Posso riusare lo stesso observable e lo stesso metodo di gestione del metodo cambiaFoglio
+    //poichè riceverò lo stesso tipo di dati
+    //Divido l'url andando a capo per questioni di leggibilità non perchè sia necessario
+    this.obsCiVett = this.http.get<Ci_vettore[]>(urlciVett);
+    this.obsCiVett.subscribe(this.prepareCiVettData);
+
+    this.obsGeoData = this.http.get<GeoFeatureCollection>(urlGeoGeom);
+    this.obsGeoData.subscribe(this.prepareData);
+
+    //console.log ("raggio in gradi " + (this.radius * 0.00001)/1.1132)
 
     //Voglio spedire al server una richiesta che mi ritorni tutte le abitazioni all'interno del cerchio
 
-    //Posso riusare lo stesso observable e lo stesso metodo di gestione del metodo
-    //cambiaFoglio poichè riceverò lo stesso tipo di dati
-    //Divido l'url andando a capo per questioni di leggibilità non perchè sia necessario
-    this.obsCiVett = this.http.get<Ci_vettore[]>(`https://3000-d293def7-367b-45c9-b3f7-45e9911e18c7.ws-eu01.gitpod.io/ci_geovettore/${this.circleLat}/${this.circleLng}/${raggioInGradi}`);
-    this.obsCiVett.subscribe(this.prepareCiVettData);
   }
 
   //Metodo che riceve i dati e li aggiunge ai marker
@@ -94,7 +107,7 @@ export class AppComponent implements OnInit {
   cambia(foglio) {
 
     let val = foglio.value; //viene preso il valore del foglio
-    this.obsCiVett = this.http.get<Ci_vettore[]>(`https://3000-d293def7-367b-45c9-b3f7-45e9911e18c7.ws-eu01.gitpod.io/ci_vettore/${val}`);  //viene effettuata la get con quel valore del foglio
+    this.obsCiVett = this.http.get<Ci_vettore[]>(`https://3000-eb72812f-0e99-4ae6-bb83-5a5bc2ad1bad.ws-eu01.gitpod.io/ci_vettore/${val}`);  //viene effettuata la get con quel valore del foglio
     this.obsCiVett.subscribe(this.prepareCiVettData); //salvo i dati richiesti dalla get
     console.log(val);
     return false;
@@ -110,8 +123,8 @@ export class AppComponent implements OnInit {
   //Una volta che la pagina web è caricata, viene lanciato il metodo ngOnInit scarico i    dati
   //dal server
   ngOnInit() {
-    this.obsGeoData = this.http.get<GeoFeatureCollection>("https://3000-d293def7-367b-45c9-b3f7-45e9911e18c7.ws-eu01.gitpod.io/");
-    this.obsGeoData.subscribe(this.prepareData);
+    //this.obsGeoData = this.http.get<GeoFeatureCollection>("https://3000-eb72812f-0e99-4ae6-bb83-5a5bc2ad1bad.ws-eu01.gitpod.io/");
+    //this.obsGeoData.subscribe(this.prepareData);
   }
   styleFunc = (feature) => {
     return ({

@@ -15,6 +15,11 @@ app.get('/', function (req, res) {
     sqlUtils.connect(req, res, sqlUtils.makeSqlRequest);
 });
 
+app.get('/geogeom/:lng/:lat/:r', function (req, res) {
+    //richiamo il metodo che ottiene l'elenco dei vettori energetici
+    sqlUtils.connect(req, res, sqlUtils.geoGeomRequest);
+});
+
 app.get('/ci_geovettore/:lng/:lat/:r', function (req, res) {
     console.log(req.params);
     //richiamo il metodo che ottiene l'elenco dei vettori energetici
