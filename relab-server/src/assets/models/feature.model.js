@@ -1,5 +1,5 @@
 module.exports = class Feature {
-    constructor(id, geometry, media, somma) {
+    constructor(id, geometry, media, somma, colore) {
         this.type = "Feature";
         this.properties = new Properties(id, media, somma);
         this.geometry = geometry;

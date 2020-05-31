@@ -78,17 +78,22 @@ export class AppComponent implements OnInit {
 
     this.obsGeoData = this.http.get<GeoFeatureCollection>(urlGeoGeom);
     this.obsGeoData.subscribe(this.prepareData);
-
-    //console.log ("raggio in gradi " + (this.radius * 0.00001)/1.1132)
-
-    //Voglio spedire al server una richiesta che mi ritorni tutte le abitazioni all'interno del cerchio
-
   }
 
   //Metodo che scarica i dati nella variabile geoJsonObject
   prepareData = (data: GeoFeatureCollection) => {
     this.geoJsonObject = data
+    console.log(data)
     console.log(this.geoJsonObject);
+  }
+
+  cambia(foglio) {
+
+    let val = foglio.value; //viene preso il valore del foglio
+    this.obsCiVett = this.http.get<Ci_vettore[]>(`${this.serverUrl}/ci_vettore/${val}`);  //viene effettuata la get con quel valore del foglio
+    this.obsCiVett.subscribe(this.prepareCiVettData); //salvo i dati richiesti dalla get
+    console.log(val);
+    return false;
   }
 
   //Metodo che riceve i dati e li aggiunge ai marker
@@ -110,24 +115,21 @@ export class AppComponent implements OnInit {
     this.zoom = 16;
   }
 
-  cambia(foglio) {
-
-    let val = foglio.value; //viene preso il valore del foglio
-    this.obsCiVett = this.http.get<Ci_vettore[]>(`${this.serverUrl}/ci_vettore/${val}`);  //viene effettuata la get con quel valore del foglio
-    this.obsCiVett.subscribe(this.prepareCiVettData); //salvo i dati richiesti dalla get
-    console.log(val);
+  mostraTutti() {
+    this.obsGeoData = this.http.get<GeoFeatureCollection>(`${this.serverUrl}/all`);  //viene effettuata la get con quel valore del foglio
+    this.obsGeoData.subscribe(this.prepareAllData); //salvo i dati richiesti dalla get
     return false;
   }
 
-  //Una volta che la pagina web è caricata, viene lanciato il metodo ngOnInit scarico i    dati
-  //dal server
-  ngOnInit() {
-    //this.obsGeoData = this.http.get<GeoFeatureCollection>("${this.serverUrl}/");
-    //this.obsGeoData.subscribe(this.prepareData);
+  prepareAllData = (data: GeoFeatureCollection) => {
+    this.geoJsonObject = data;
+    console.log(data);
   }
+
   styleFunc = (feature) => {
     return ({
       clickable: false,
+      //fillcolor: this.fillColor,
       fillColor: this.avgColorMap(feature.i.media),
       strokeWeight: 1,
       fillOpacity: 1  //Fill opacity 1 = opaco (i numeri tra 0 e 1 sono le gradazioni di trasparenza)
@@ -149,6 +151,7 @@ export class AppComponent implements OnInit {
     if (1948 < media && media <= 3780) return "#FF0000";
     return "#FF0000"
   }
+
   //mappa scala di verdi
   avgColorMapGreen = (media) => {
     if (media <= 36) return "#EBECDF";
@@ -163,6 +166,13 @@ export class AppComponent implements OnInit {
     if (1068 < media && media <= 1948) return "#3B625B";
     if (1948 < media && media <= 3780) return "#2F4E4F";
     return "#003000" //Quasi nero
+  }
+
+  //Una volta che la pagina web è caricata, viene lanciato il metodo ngOnInit scarico i    dati
+  //dal server
+  ngOnInit() {
+    //this.obsGeoData = this.http.get<GeoFeatureCollection>("${this.serverUrl}/");
+    //this.obsGeoData.subscribe(this.prepareData);
   }
 
 }
