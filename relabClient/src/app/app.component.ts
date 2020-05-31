@@ -19,6 +19,7 @@ export class AppComponent implements OnInit {
   obsGeoData: Observable<GeoFeatureCollection>;
   obsCiVett: Observable<Ci_vettore[]>; //Crea un observable per ricevere i vettori energetici
   markers: Marker[] //Marker va importato
+  mapVisibility: string = 'visible';
   lng: number = 9.205331366401035;
   lat: number = 45.45227445505016;
   serverUrl: string = "https://3000-eb72812f-0e99-4ae6-bb83-5a5bc2ad1bad.ws-eu01.gitpod.io";
@@ -40,6 +41,7 @@ export class AppComponent implements OnInit {
     this.lat = this.circleLat; //Sposto il centro della mappa qui
     this.lng = this.circleLng;
     this.zoom = 15;  //Zoom sul cerchio
+    this.mapVisibility = "'visible'";
   }
 
   //Aggiungi il gestore del metodo radiusChange
@@ -54,6 +56,7 @@ export class AppComponent implements OnInit {
     console.log(this.radius);
     this.circleLat = circleCenter.coords.lat;
     this.circleLng = circleCenter.coords.lng;
+
     if (this.radius > this.maxRadius) {
       console.log("area selezionata troppo vasta sarà reimpostata a maxRadius");
       this.radius = this.maxRadius;
@@ -78,6 +81,8 @@ export class AppComponent implements OnInit {
 
     this.obsGeoData = this.http.get<GeoFeatureCollection>(urlGeoGeom);
     this.obsGeoData.subscribe(this.prepareData);
+
+    this.mapVisibility = "'hidden'";
   }
 
   //Metodo che scarica i dati nella variabile geoJsonObject
