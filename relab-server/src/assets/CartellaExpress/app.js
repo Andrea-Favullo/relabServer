@@ -39,8 +39,6 @@ app.get('/ci_vettore/:foglio', function (req, res) {
     sqlUtils.connect(req, res, sqlUtils.ciVettRequest);
 });
 
-
-
 app.listen(3000, function () {
     console.log('Example app listening on port 3000!');
 });

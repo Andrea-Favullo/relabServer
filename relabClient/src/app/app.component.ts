@@ -85,6 +85,12 @@ export class AppComponent implements OnInit {
 
   }
 
+  //Metodo che scarica i dati nella variabile geoJsonObject
+  prepareData = (data: GeoFeatureCollection) => {
+    this.geoJsonObject = data
+    console.log(this.geoJsonObject);
+  }
+
   //Metodo che riceve i dati e li aggiunge ai marker
   prepareCiVettData = (data: Ci_vettore[]) => {
     let latTot = 0; //Uso queste due variabili per calcolare latitudine e longitudine media
@@ -107,26 +113,20 @@ export class AppComponent implements OnInit {
   cambia(foglio) {
 
     let val = foglio.value; //viene preso il valore del foglio
-    this.obsCiVett = this.http.get<Ci_vettore[]>(`https://3000-eb72812f-0e99-4ae6-bb83-5a5bc2ad1bad.ws-eu01.gitpod.io/ci_vettore/${val}`);  //viene effettuata la get con quel valore del foglio
+    this.obsCiVett = this.http.get<Ci_vettore[]>(`${this.serverUrl}/ci_vettore/${val}`);  //viene effettuata la get con quel valore del foglio
     this.obsCiVett.subscribe(this.prepareCiVettData); //salvo i dati richiesti dalla get
     console.log(val);
     return false;
   }
 
-  //Metodo che scarica i dati nella variabile geoJsonObject
-  prepareData = (data: GeoFeatureCollection) => {
-    console.log(`Metodo prepareData`)
-    this.geoJsonObject = data
-    console.log(this.geoJsonObject);
-  }
-
   //Una volta che la pagina web è caricata, viene lanciato il metodo ngOnInit scarico i    dati
   //dal server
   ngOnInit() {
-    //this.obsGeoData = this.http.get<GeoFeatureCollection>("https://3000-eb72812f-0e99-4ae6-bb83-5a5bc2ad1bad.ws-eu01.gitpod.io/");
+    //this.obsGeoData = this.http.get<GeoFeatureCollection>("${this.serverUrl}/");
     //this.obsGeoData.subscribe(this.prepareData);
   }
   styleFunc = (feature) => {
+    console.log(feature)
     return ({
       clickable: false,
       fillColor: this.fillColor,
