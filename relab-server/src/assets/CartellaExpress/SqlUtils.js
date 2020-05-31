@@ -26,7 +26,7 @@ module.exports = class SqlUtils {
         let sqlRequest = new sql.Request();  //sqlRequest: oggetto che serve a eseguire le query
         let q = 'SELECT DISTINCT TOP (100) [WKT] FROM [Katmai].[dbo].[intMil4326WKT]';
         //eseguo la query e aspetto il risultato nella callback
-        sqlRequest.query(q, (err, result) => { SqlUtils.sendQueryResults(err, result, res) });
+        //sqlRequest.query(q, (err, result) => { SqlUtils.sendQueryResults(err, result, res) });
     }
 
     static sendQueryResults(err, result, res) {

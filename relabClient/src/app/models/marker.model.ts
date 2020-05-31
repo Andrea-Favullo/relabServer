@@ -51,6 +51,5 @@ export class Marker {
 
     }
     this.label = "";
-
   }
 }

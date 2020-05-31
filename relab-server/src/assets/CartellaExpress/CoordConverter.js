@@ -17,15 +17,11 @@ module.exports = class CoordConverter {
     for (const record of recordset) {
       let media = record["media"];
       let somma = record["somma"];
-     // console.log(media);
-     // console.log(somma);
       let polygonGeometry = parse(record["WKT"]); //parso da wkt a geojson geometry
       //let geom = this._convertPolygon(polygonGeometry); // converto in "EPSG:4362" 
       let geom = (polygonGeometry); // non converto più in "EPSG:4362" 
       // e metto la geometry  geojson
-      let f = new Feature(i, geom, media, somma);
-      console.log(f)
-      geoJsonHeader.features.push(f);
+      geoJsonHeader.features.push(new Feature(i, geom, media, somma));
       i++;
     }
     return geoJsonHeader;
