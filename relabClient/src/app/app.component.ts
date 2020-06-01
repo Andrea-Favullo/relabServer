@@ -21,6 +21,7 @@ export class AppComponent implements OnInit {
   markers: Marker[] //Marker va importato
   visible: boolean = false;
   loading: boolean = false;
+  modalità: string = "media";
   lng: number = 9.205331366401035;
   lat: number = 45.45227445505016;
   serverUrl: string = "https://3000-ae6c84fc-b32c-40c9-bf38-4c0bb37fb634.ws-eu01.gitpod.io";
@@ -66,7 +67,7 @@ export class AppComponent implements OnInit {
 
   //Aggiungi il gestore del metodo radiusChange
   circleRedim(newRadius: number) {
-    console.log(newRadius) //posso leggere sulla console il nuovo raggio
+    //console.log(newRadius) //posso leggere sulla console il nuovo raggio
     this.radius = newRadius;  //Ogni volta che modifico il cerchio, ne salvo il raggio
   }
 
@@ -75,8 +76,8 @@ export class AppComponent implements OnInit {
 
     this.onRequestStarted();
 
-    console.log(circleCenter); //Voglio ottenere solo i valori entro questo cerchio
-    console.log(this.radius);
+    //console.log(circleCenter); //Voglio ottenere solo i valori entro questo cerchio
+    //console.log(this.radius);
     this.circleLat = circleCenter.coords.lat;
     this.circleLng = circleCenter.coords.lng;
 
@@ -164,10 +165,10 @@ export class AppComponent implements OnInit {
 
   prepareAllData = (data: GeoFeatureCollection) => {
 
-    //console.log(data);
     this.geoJsonObject = data;
 
     for( const i of data.features ){
+
       if (this.styleFunc(i)!=null){
         let colore = this.styleFunc(i).fillColor;
         this.fillColor = colore;
@@ -178,11 +179,35 @@ export class AppComponent implements OnInit {
 
   }
 
+  media(){
+    console.log(`cliccato media`)
+    this.modalità = "media";
+    //return false;
+  }
+
+  somma(){
+    console.log(`cliccato somma`)
+    this.modalità = "somma";
+    //return false;
+  }
+
   styleFunc = (feature) => {
-    //console.log(feature.j);
-    let mediaGiusta=0
+    switch (this.modalità){
+      case("media"):{
+        return this.styleMedia(feature);
+        break;
+      }
+      case("somma"):{
+        return this.styleSomma(feature);
+        break;
+      }
+    }
+  }
+
+  styleMedia = (feature) => {
+    let mediaGiusta=0;
     if( feature.j!=null ){
-      mediaGiusta = feature.j.media
+      mediaGiusta = feature.j.media;
       return ({
         clickable: false,
         fillColor: this.avgColorMapGreen(mediaGiusta),
@@ -191,6 +216,20 @@ export class AppComponent implements OnInit {
       });
     }
   }
+
+  styleSomma = (feature) => {
+    let sommaGiusta=0;
+    if (feature.j!=null){
+      sommaGiusta = feature.j.somma;
+      return ({
+        clickable: false,
+        fillColor: this.avgColorMapGreen(sommaGiusta),
+        strokeWeight: 1,
+        fillOpacity: 1
+      });
+    }
+  }
+
   //Mappa rosso-verde
   avgColorMap = (media) => {
     if (media <= 36) return "#00FF00";
@@ -206,6 +245,20 @@ export class AppComponent implements OnInit {
     if (1948 < media && media <= 3780) return "#FF0000";
     return "#FF0000"
   }
+  sumColorMap = (somma) => {
+    if (somma <= 360) return "#00FF00";
+    if (360 < somma && somma <= 720) return "#33ff00";
+    if (720 < somma && somma <= 1080) return "#66ff00";
+    if (1080 < somma && somma <= 1440) return "#99ff00";
+    if (1440 < somma && somma <= 1800) return "#ccff00";
+    if (1800 < somma && somma <= 2160) return "#FFFF00";
+    if (2160 < somma && somma <= 2520) return "#FFCC00";
+    if (2520 < somma && somma <= 2880) return "#ff9900";
+    if (2880 < somma && somma <= 3240) return "#ff6600";
+    if (3240 < somma && somma <= 3600) return "#FF3300";
+    if (3600 < somma && somma <= 3960) return "#FF0000";
+    return "#FF0000"
+  }
   //mappa scala di verdi
   avgColorMapGreen = (media) => {
     if (media <= 36) return "#EBECDF";
@@ -219,6 +272,20 @@ export class AppComponent implements OnInit {
     if (1032 < media && media <= 1068) return "#487563";
     if (1068 < media && media <= 1948) return "#3B625B";
     if (1948 < media && media <= 3780) return "#2F4E4F";
+    return "#003000" //Quasi nero
+  }
+  sumColorMapGreen = (somma) => {
+    if (somma <= 360) return "#EBECDF";
+    if (360 < somma && somma <= 720) return "#DADFC9";
+    if (720 < somma && somma <= 1080) return "#C5D2B4";
+    if (1080 < somma && somma <= 1440) return "#ADC49F";
+    if (1440 < somma && somma <= 1800) return "#93B68B";
+    if (1800 < somma && somma <= 2160) return "#77A876";
+    if (2160 < somma && somma <= 2520) return "#629A6C";
+    if (2520 < somma && somma <= 2880) return "#558869";
+    if (2880 < somma && somma <= 3240) return "#487563";
+    if (3240 < somma && somma <= 3600) return "#3B625B";
+    if (3600 < somma && somma <= 3960) return "#2F4E4F";
     return "#003000" //Quasi nero
   }
 

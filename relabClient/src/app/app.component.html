@@ -48,6 +48,12 @@
     Mostra tutte le zone catastali<br>(lasciate ogni speranza o voi che cliccate)
   </button> <br>
 
+  <label for="sum">Seleziona in base alla somma</label>
+  <input id="sum" type="radio" (click)="somma()" name="modes">
+  <br>
+  <label for="avg">Seleziona in base alla media</label>
+  <input id="avg" type="radio" (click)="media()" name="modes" checked>
+
   <img *ngIf="isLoading()" src="https://i.pinimg.com/originals/50/d0/50/50d050588f1b25a377f1bed2ad8f0913.gif" height="225">
 
 </form>
