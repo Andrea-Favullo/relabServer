@@ -1,23 +1,39 @@
 <!DOCTYPE html>
 <h1>{{title}}</h1>
 
-<agm-map [latitude]="lat" [longitude]="lng" [zoom]="zoom" [zoomControl]="true" (mapClick)="mapClicked($event)">
+<agm-map
+  [latitude]="lat"  [zoomControl]="true"
+  [longitude]="lng" [zoom]="zoom"
+  (mapClick)="mapClicked($event)">
 
-	<agm-marker *ngFor="let m of markers" [latitude]="m.lat" [longitude]="m.lng" [label]="m.label" [iconUrl]="m.icon">
+	<agm-marker
+    *ngFor="let m of markers"
+    [latitude]="m.lat"  [iconUrl]="m.icon"
+    [longitude]="m.lng" [label]="m.label">
 	</agm-marker>
+
 	<agm-data-layer [geoJson]="geoJsonObject" [style]="styleFunc"></agm-data-layer>
-	<!--Aggiungi un cerchio alla mappa-->
-	<agm-circle
-    [latitude]="circleLat"   [longitude]="circleLng" [radius]="radius"
-		[circleDraggable]="true" [editable]="true"       [fillColor]="'red'"
-    (radiusChange)=circleRedim($event)
-		(circleDblClick)=circleDoubleClicked($event)>
-		<!-- Aggiungi la gestione dell'evento cambio raggio -->
-		<!--Aggiungi la gestione dell'evento doppio click-->
-	</agm-circle>
+
+  <div *ngIf="circleVisibility()">
+
+    <!--Aggiungi un cerchio alla mappa-->
+    <agm-circle
+      [latitude]="circleLat"   [longitude]="circleLng" [radius]="radius"
+      [circleDraggable]="true" [editable]="true"       [fillColor]="'red'"
+      (radiusChange)=circleRedim($event)
+      (circleDblClick)=circleDoubleClicked($event)>
+      <!-- Aggiungi la gestione dell'evento cambio raggio -->
+      <!--Aggiungi la gestione dell'evento doppio click-->
+    </agm-circle>
+
+  </div>
+
 </agm-map>
+
 <form>
+
 	<h3>Vettori energetici</h3>
+
 	<div>
 		<input name="title" #num>
 		<!--Aggiunta una variabile di template-->
@@ -26,11 +42,9 @@
 
 	<button (click)="cambia(num)"> <!--Passiamo le variabili come parametro -->
     Cambia
-  </button>
-
-  <br>
+  </button> <br>
 
   <button (click)="mostraTutti()">
-    Mostra tutte le zone catastali (lasciate ogni speranza o voi che cliccate)
+    Mostra tutte le zone catastali<br>(lasciate ogni speranza o voi che cliccate)
   </button>
 </form>

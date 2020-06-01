@@ -19,7 +19,7 @@ export class AppComponent implements OnInit {
   obsGeoData: Observable<GeoFeatureCollection>;
   obsCiVett: Observable<Ci_vettore[]>; //Crea un observable per ricevere i vettori energetici
   markers: Marker[] //Marker va importato
-  //mapVisibility: string = 'visible';
+  visible: boolean = false;
   lng: number = 9.205331366401035;
   lat: number = 45.45227445505016;
   serverUrl: string = "https://3000-a47c3bcb-b751-4635-a0e0-323792bba290.ws-eu01.gitpod.io";
@@ -33,6 +33,10 @@ export class AppComponent implements OnInit {
     //Facciamo iniettare il modulo HttpClient dal framework Angular (ricordati di importare la libreria)
   }
 
+  circleVisibility(){
+    return this.visible;
+  }
+
   //Aggiungi il gestore del metodo mapClicked
   //import { MouseEvent } from '@agm/core'; <--da importare
   mapClicked($event: any) {
@@ -40,8 +44,8 @@ export class AppComponent implements OnInit {
     this.circleLng = $event.coords.lng; //Sposto il centro del cerchio qui
     this.lat = this.circleLat; //Sposto il centro della mappa qui
     this.lng = this.circleLng;
+    this.visible = true;
     this.zoom = 15;  //Zoom sul cerchio
-    //this.mapVisibility = "'visible'";
   }
 
   //Aggiungi il gestore del metodo radiusChange
@@ -56,6 +60,7 @@ export class AppComponent implements OnInit {
     console.log(this.radius);
     this.circleLat = circleCenter.coords.lat;
     this.circleLng = circleCenter.coords.lng;
+    this.visible = false;
 
     if (this.radius > this.maxRadius) {
       console.log("area selezionata troppo vasta sarà reimpostata a maxRadius");
@@ -81,15 +86,12 @@ export class AppComponent implements OnInit {
 
     this.obsGeoData = this.http.get<GeoFeatureCollection>(urlGeoGeom);
     this.obsGeoData.subscribe(this.prepareData);
-
-    //this.mapVisibility = "'hidden'";
   }
 
   //Metodo che scarica i dati nella variabile geoJsonObject
   prepareData = (data: GeoFeatureCollection) => {
     this.geoJsonObject = data
     console.log(data)
-    console.log(this.geoJsonObject);
   }
 
   cambia(foglio) {
@@ -131,17 +133,14 @@ export class AppComponent implements OnInit {
     //console.log(data);
     for( let i=0; i<data.features.length; i++ ){
       let colore = this.styleFunc(data.features[i]).fillColor;
-      console.log(`Colore n°${i} preso: ${colore}`);
       this.fillColor = colore;
     }
   }
 
   styleFunc = (feature) => {
-    console.log(feature);
     return ({
       clickable: false,
-      //fillcolor: this.fillColor,
-      fillColor: this.avgColorMap(feature.j.media),
+      fillColor: this.avgColorMapGreen(feature.j.media),
       strokeWeight: 1,
       fillOpacity: 1  //Fill opacity 1 = opaco (i numeri tra 0 e 1 sono le gradazioni di trasparenza)
     });
