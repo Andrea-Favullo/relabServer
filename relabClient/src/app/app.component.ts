@@ -23,7 +23,7 @@ export class AppComponent implements OnInit {
   loading: boolean = false;
   lng: number = 9.205331366401035;
   lat: number = 45.45227445505016;
-  serverUrl: string = "https://3000-a47c3bcb-b751-4635-a0e0-323792bba290.ws-eu01.gitpod.io";
+  serverUrl: string = "https://3000-ae6c84fc-b32c-40c9-bf38-4c0bb37fb634.ws-eu01.gitpod.io";
 
   circleLat: number = 0; //Latitudine e longitudine iniziale del cerchio
   circleLng: number = 0;
@@ -108,7 +108,6 @@ export class AppComponent implements OnInit {
     this.obsGeoData = this.http.get<GeoFeatureCollection>(urlGeoGeom);
     this.obsGeoData.subscribe(this.prepareData);
 
-    this.onRequestFinished();
   }
 
   mostraTutti() {
@@ -123,15 +122,13 @@ export class AppComponent implements OnInit {
 
   cambia(foglio) {
 
-    let val = foglio.value; //viene preso il valore del foglio
-
+    //viene preso il valore del foglio
+    let val = foglio.value;
     this.onRequestStarted();
-
-    this.obsCiVett = this.http.get<Ci_vettore[]>(`${this.serverUrl}/ci_vettore/${val}`);  //viene effettuata la get con quel valore del foglio
-    this.obsCiVett.subscribe(this.prepareCiVettData); //salvo i dati richiesti dalla get
-
-    console.log(val);
-
+    //viene effettuata la get con quel valore del foglio
+    this.obsCiVett = this.http.get<Ci_vettore[]>(`${this.serverUrl}/ci_vettore/${val}`);
+    //salvo i dati richiesti dalla get
+    this.obsCiVett.subscribe(this.prepareCiVettData);
     return false;
   }
 
@@ -170,9 +167,11 @@ export class AppComponent implements OnInit {
     //console.log(data);
     this.geoJsonObject = data;
 
-    for( let i=0; i<data.features.length; i++ ){
-      let colore = this.styleFunc(data.features[i]).fillColor;
-      this.fillColor = colore;
+    for( const i of data.features ){
+      if (this.styleFunc(i)!=null){
+        let colore = this.styleFunc(i).fillColor;
+        this.fillColor = colore;
+      }
     }
 
     this.onRequestFinished();
@@ -180,12 +179,17 @@ export class AppComponent implements OnInit {
   }
 
   styleFunc = (feature) => {
-    return ({
-      clickable: false,
-      fillColor: this.avgColorMapGreen(feature.j.media),
-      strokeWeight: 1,
-      fillOpacity: 1  //Fill opacity 1 = opaco (i numeri tra 0 e 1 sono le gradazioni di trasparenza)
-    });
+    //console.log(feature.j);
+    let mediaGiusta=0
+    if( feature.j!=null ){
+      mediaGiusta = feature.j.media
+      return ({
+        clickable: false,
+        fillColor: this.avgColorMapGreen(mediaGiusta),
+        strokeWeight: 1,
+        fillOpacity: 1  //Fill opacity 1 = opaco (i numeri tra 0 e 1 sono le gradazioni di trasparenza)
+      });
+    }
   }
   //Mappa rosso-verde
   avgColorMap = (media) => {

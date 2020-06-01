@@ -41,7 +41,7 @@ module.exports = class SqlUtils {
         FROM [Katmai].[dbo].[intMil4326WKT]
         WHERE FOGLIO = ${foglio}`
     //eseguo la query e aspetto il risultato nella callback
-    sqlRequest.query(q, (err, result) => { SqlUtils.sendCiVettReult(err, result, res) });
+    sqlRequest.query(q, (err, result) => { SqlUtils.sendCiVettResult(err, result, res) });
   }
 
   static sendCiVettResult(err, result, res) {

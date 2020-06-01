@@ -46,10 +46,8 @@
 
   <button (click)="mostraTutti()">
     Mostra tutte le zone catastali<br>(lasciate ogni speranza o voi che cliccate)
-  </button>
+  </button> <br>
 
-  <div *ngIf="isLoading()">
-    <div> <img src="https://i.pinimg.com/originals/dd/cb/1f/ddcb1fa912f785e19329d4dde984d8ec.gif" height="225"> </div>
-  </div>
+  <img *ngIf="isLoading()" src="https://i.pinimg.com/originals/50/d0/50/50d050588f1b25a377f1bed2ad8f0913.gif" height="225">
 
 </form>
