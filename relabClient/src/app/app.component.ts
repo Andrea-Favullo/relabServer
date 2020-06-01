@@ -20,6 +20,7 @@ export class AppComponent implements OnInit {
   obsCiVett: Observable<Ci_vettore[]>; //Crea un observable per ricevere i vettori energetici
   markers: Marker[] //Marker va importato
   visible: boolean = false;
+  loading: boolean = false;
   lng: number = 9.205331366401035;
   lat: number = 45.45227445505016;
   serverUrl: string = "https://3000-a47c3bcb-b751-4635-a0e0-323792bba290.ws-eu01.gitpod.io";
@@ -33,7 +34,21 @@ export class AppComponent implements OnInit {
     //Facciamo iniettare il modulo HttpClient dal framework Angular (ricordati di importare la libreria)
   }
 
-  circleVisibility(){
+  onRequestStarted(): void {
+    this.loading = true;
+    console.log(`sta caricando`);
+  }
+
+  onRequestFinished(): void {
+    this.loading = false;
+    console.log(`non sta caricando`);
+  }
+
+  isLoading(): boolean{
+    return this.loading;
+  }
+
+  circleVisibility(): boolean{
     return this.visible;
   }
 
@@ -44,8 +59,9 @@ export class AppComponent implements OnInit {
     this.circleLng = $event.coords.lng; //Sposto il centro del cerchio qui
     this.lat = this.circleLat; //Sposto il centro della mappa qui
     this.lng = this.circleLng;
-    this.visible = true;
     this.zoom = 15;  //Zoom sul cerchio
+
+    this.visible = true;
   }
 
   //Aggiungi il gestore del metodo radiusChange
@@ -56,10 +72,14 @@ export class AppComponent implements OnInit {
 
   //Aggiungi il gestore del metodo circleDblClick
   circleDoubleClicked(circleCenter) {
+
+    this.onRequestStarted();
+
     console.log(circleCenter); //Voglio ottenere solo i valori entro questo cerchio
     console.log(this.radius);
     this.circleLat = circleCenter.coords.lat;
     this.circleLng = circleCenter.coords.lng;
+
     this.visible = false;
 
     if (this.radius > this.maxRadius) {
@@ -81,30 +101,51 @@ export class AppComponent implements OnInit {
     //Posso riusare lo stesso observable e lo stesso metodo di gestione del metodo cambiaFoglio
     //poichè riceverò lo stesso tipo di dati
     //Divido l'url andando a capo per questioni di leggibilità non perchè sia necessario
+
     this.obsCiVett = this.http.get<Ci_vettore[]>(urlciVett);
     this.obsCiVett.subscribe(this.prepareCiVettData);
 
     this.obsGeoData = this.http.get<GeoFeatureCollection>(urlGeoGeom);
     this.obsGeoData.subscribe(this.prepareData);
+
+    this.onRequestFinished();
   }
 
-  //Metodo che scarica i dati nella variabile geoJsonObject
-  prepareData = (data: GeoFeatureCollection) => {
-    this.geoJsonObject = data
-    console.log(data)
+  mostraTutti() {
+
+    this.onRequestStarted();
+
+    this.obsGeoData = this.http.get<GeoFeatureCollection>(`${this.serverUrl}/all`);  //viene effettuata la get con quel valore del foglio
+    this.obsGeoData.subscribe(this.prepareAllData); //salvo i dati richiesti dalla get
+
+    return false;
   }
 
   cambia(foglio) {
 
     let val = foglio.value; //viene preso il valore del foglio
+
+    this.onRequestStarted();
+
     this.obsCiVett = this.http.get<Ci_vettore[]>(`${this.serverUrl}/ci_vettore/${val}`);  //viene effettuata la get con quel valore del foglio
     this.obsCiVett.subscribe(this.prepareCiVettData); //salvo i dati richiesti dalla get
+
     console.log(val);
+
     return false;
+  }
+
+  //Metodo che scarica i dati nella variabile geoJsonObject
+  prepareData = (data: GeoFeatureCollection) => {
+
+    this.geoJsonObject = data
+    console.log(data);
+    this.onRequestFinished();
   }
 
   //Metodo che riceve i dati e li aggiunge ai marker
   prepareCiVettData = (data: Ci_vettore[]) => {
+
     let latTot = 0; //Uso queste due variabili per calcolare latitudine e longitudine media
     let lngTot = 0; //E centrare la mappa
 
@@ -120,21 +161,22 @@ export class AppComponent implements OnInit {
     this.lng = lngTot / data.length; //faccio la media delle coordinate
     this.lat = latTot / data.length;
     this.zoom = 16;
-  }
 
-  mostraTutti() {
-    this.obsGeoData = this.http.get<GeoFeatureCollection>(`${this.serverUrl}/all`);  //viene effettuata la get con quel valore del foglio
-    this.obsGeoData.subscribe(this.prepareAllData); //salvo i dati richiesti dalla get
-    return false;
+    this.onRequestFinished();
   }
 
   prepareAllData = (data: GeoFeatureCollection) => {
-    this.geoJsonObject = data;
+
     //console.log(data);
+    this.geoJsonObject = data;
+
     for( let i=0; i<data.features.length; i++ ){
       let colore = this.styleFunc(data.features[i]).fillColor;
       this.fillColor = colore;
     }
+
+    this.onRequestFinished();
+
   }
 
   styleFunc = (feature) => {
@@ -145,7 +187,6 @@ export class AppComponent implements OnInit {
       fillOpacity: 1  //Fill opacity 1 = opaco (i numeri tra 0 e 1 sono le gradazioni di trasparenza)
     });
   }
-
   //Mappa rosso-verde
   avgColorMap = (media) => {
     if (media <= 36) return "#00FF00";
@@ -161,7 +202,6 @@ export class AppComponent implements OnInit {
     if (1948 < media && media <= 3780) return "#FF0000";
     return "#FF0000"
   }
-
   //mappa scala di verdi
   avgColorMapGreen = (media) => {
     if (media <= 36) return "#EBECDF";
