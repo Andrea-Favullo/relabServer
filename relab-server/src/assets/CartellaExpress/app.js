@@ -11,7 +11,6 @@ app.get('/', function (req, res) {
     //Per connettermi al DB uso il metodo statico sqlUtils.connect
     //Passo come parametro la funzione sqlUtils.makeSqlRequest che verrà lanciata 
     //se la connessione al DB avrà successo
-
     sqlUtils.connect(req, res, sqlUtils.makeSqlRequest);
 });
 

@@ -7,8 +7,10 @@
 	</agm-marker>
 	<agm-data-layer [geoJson]="geoJsonObject" [style]="styleFunc"></agm-data-layer>
 	<!--Aggiungi un cerchio alla mappa-->
-	<agm-circle [latitude]="circleLat" [longitude]="circleLng" [radius]="radius" [fillColor]="'red'"
-		[circleDraggable]="true" [editable]="true" (radiusChange)=circleRedim($event)
+	<agm-circle
+    [latitude]="circleLat"   [longitude]="circleLng" [radius]="radius"
+		[circleDraggable]="true" [editable]="true"       [fillColor]="'red'"
+    (radiusChange)=circleRedim($event)
 		(circleDblClick)=circleDoubleClicked($event)>
 		<!-- Aggiungi la gestione dell'evento cambio raggio -->
 		<!--Aggiungi la gestione dell'evento doppio click-->

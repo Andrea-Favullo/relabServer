@@ -19,10 +19,10 @@ export class AppComponent implements OnInit {
   obsGeoData: Observable<GeoFeatureCollection>;
   obsCiVett: Observable<Ci_vettore[]>; //Crea un observable per ricevere i vettori energetici
   markers: Marker[] //Marker va importato
-  mapVisibility: string = 'visible';
+  //mapVisibility: string = 'visible';
   lng: number = 9.205331366401035;
   lat: number = 45.45227445505016;
-  serverUrl: string = "https://3000-eb72812f-0e99-4ae6-bb83-5a5bc2ad1bad.ws-eu01.gitpod.io";
+  serverUrl: string = "https://3000-a47c3bcb-b751-4635-a0e0-323792bba290.ws-eu01.gitpod.io";
 
   circleLat: number = 0; //Latitudine e longitudine iniziale del cerchio
   circleLng: number = 0;
@@ -41,7 +41,7 @@ export class AppComponent implements OnInit {
     this.lat = this.circleLat; //Sposto il centro della mappa qui
     this.lng = this.circleLng;
     this.zoom = 15;  //Zoom sul cerchio
-    this.mapVisibility = "'visible'";
+    //this.mapVisibility = "'visible'";
   }
 
   //Aggiungi il gestore del metodo radiusChange
@@ -82,7 +82,7 @@ export class AppComponent implements OnInit {
     this.obsGeoData = this.http.get<GeoFeatureCollection>(urlGeoGeom);
     this.obsGeoData.subscribe(this.prepareData);
 
-    this.mapVisibility = "'hidden'";
+    //this.mapVisibility = "'hidden'";
   }
 
   //Metodo che scarica i dati nella variabile geoJsonObject
@@ -128,14 +128,20 @@ export class AppComponent implements OnInit {
 
   prepareAllData = (data: GeoFeatureCollection) => {
     this.geoJsonObject = data;
-    console.log(data);
+    //console.log(data);
+    for( let i=0; i<data.features.length; i++ ){
+      let colore = this.styleFunc(data.features[i]).fillColor;
+      console.log(`Colore n°${i} preso: ${colore}`);
+      this.fillColor = colore;
+    }
   }
 
   styleFunc = (feature) => {
+    console.log(feature);
     return ({
       clickable: false,
       //fillcolor: this.fillColor,
-      fillColor: this.avgColorMap(feature.i.media),
+      fillColor: this.avgColorMap(feature.j.media),
       strokeWeight: 1,
       fillOpacity: 1  //Fill opacity 1 = opaco (i numeri tra 0 e 1 sono le gradazioni di trasparenza)
     });
