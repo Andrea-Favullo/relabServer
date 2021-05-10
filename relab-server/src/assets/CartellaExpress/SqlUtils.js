@@ -5,10 +5,10 @@ const CC = require('./CoordConverter.js');
 const coordConverter = new CC();
 
 const config = {
-  user: 'PCTO',  //Vostro user name
-  password: 'xxx123#', //Vostra password
-  server: "213.140.22.237",  //Stringa di connessione
-  database: 'Katmai', //(Nome del DB)
+  user: '',  //Vostro user name
+  password: '', //Vostra password
+  server: "",  //Stringa di connessione
+  database: '', //(Nome del DB)
 }
 
 module.exports = class SqlUtils {
